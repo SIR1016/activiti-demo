@@ -11,12 +11,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 固定代理人流程
  * @author 张子成
  * @since 2019年8月25日
  */
-public class ActivitiTest {
+public class Activiti1WithFixedAssigneeTest {
 
-    // 会默认按照Resources目录下的activiti.cfg.xml创建流程引擎
+    // 默认按照Resources目录下的activiti.cfg.xml创建流程引擎
     ProcessEngine processEngine = ProcessEngineConfiguration
             .createProcessEngineConfigurationFromResource("processes/activiti.cfg.xml").buildProcessEngine();
 
@@ -86,9 +87,12 @@ public class ActivitiTest {
     // 历史活动查询
     @Test
     public void historyActInstanceList() {
+        long startTime=System.currentTimeMillis(); //获取开始时间
         List<HistoricActivityInstance> list = processEngine.getHistoryService() // 历史任务Service
                 .createHistoricActivityInstanceQuery() // 创建历史活动实例查询
-                .processInstanceId("2501") // 指定流程实例id （ACT_HI_ACTINST表PROC_INST_ID_字段）
+                //.processInstanceId("50001") // 指定流程实例id （ACT_HI_ACTINST表PROC_INST_ID_字段）
+                .taskAssignee("head_men")
+                //.finished()
                 .list();
         for (HistoricActivityInstance hi : list) {
             System.out.println("任务ID:" + hi.getId());
@@ -99,6 +103,9 @@ public class ActivitiTest {
             System.out.println("结束时间：" + hi.getEndTime());
             System.out.println("===========================");
         }
+
+        long endTime=System.currentTimeMillis(); //获取结束时间
+        System.out.println("程序运行时间： "+(endTime-startTime)+"ms");
     }
 
 
